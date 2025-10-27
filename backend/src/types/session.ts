@@ -2,7 +2,7 @@ import 'express-session';
 
 // Define the User interface
 export interface User {
-  id: number;
+  id: string;
   name: string;
   email?: string;
   // Add other user properties as needed
@@ -12,6 +12,7 @@ export interface User {
 declare module 'express-session' {
   interface SessionData {
     user?: User;
+    authorized?: boolean;
   }
 }
 

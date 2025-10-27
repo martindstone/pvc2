@@ -1,35 +1,39 @@
+import 'dotenv/config';
 import express from 'express';
 import session from 'express-session';
+import passport from 'passport';
 import { errorHandler } from './middleware/errorHandler';
-import './types/session';
 
-import healthCheckRouter from './routes/healthCheckRoutes';
+import healthCheckRouter from './routes/healthCheckRouter';
+import authRouter from './routes/authRouter';
 
+import { authGuard } from './middleware/authGuard';
+
+const SESSION_SECRET = process.env.SESSION_SECRET || 'your-secret-key';
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
 app.use(session({
-  secret: 'your-secret-key',
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
+  cookie: { secure: "auto" }
 }));
 
-app.use(errorHandler);
+// Initialize Passport (must be after express-session)
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api/health', healthCheckRouter);
+app.use('/auth', authRouter);
 
-app.get('/', (req, res) => {
-  console.log(req.session);
+// test protected route
+app.get('/', authGuard, (req, res) => {
   res.send('Welcome to the PVC2 Backend API');
 });
 
-app.get('/set-session', (req, res) => {
-  const user = { id: 1, name: 'Test User' };
-  req.session.user = user;
-  res.send('Session data set');
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
