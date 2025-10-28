@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
+const APP_URL = process.env.APP_URL || 'http://localhost:5173';
+
 // Allowed email domains (comma-separated), e.g. "example.com,sub.example.com"
 const ALLOWED_EMAIL_DOMAINS: string[] = (process.env.ALLOWED_EMAIL_DOMAINS || '')
   .split(',')
@@ -61,7 +63,7 @@ export class AuthController {
   // Google OAuth callback - default middleware form
   googleCallback = passport.authenticate('google', {
     session: true,
-    successRedirect: '/',
+    successRedirect: `${APP_URL}`,
     failureRedirect: '/login?error=auth_failed'
   });
 
@@ -73,7 +75,7 @@ export class AuthController {
         if (err) return next(err);
         // Clear session cookie (default name: connect.sid)
         res.clearCookie('connect.sid');
-        res.status(200).json({ message: 'Logged out successfully' });
+        res.redirect(`${APP_URL}`);
       });
     };
 
