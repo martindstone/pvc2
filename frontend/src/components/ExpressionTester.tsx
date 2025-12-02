@@ -3,7 +3,6 @@ import React, { useMemo, useState } from "react";
 import {
   Box,
   Code,
-  Divider,
   Field,
   Heading,
   NumberInput,
@@ -132,7 +131,7 @@ export const ExpressionTester: React.FC = () => {
         </SimpleGrid>
       </Box>
 
-      <Divider />
+      <Box borderTopWidth="1px" borderColor="gray.200" />
 
       <Stack gap={6}>
         <Heading size="md">Stepwise expressions</Heading>
