@@ -4,10 +4,9 @@ import {
   Box,
   Code,
   Divider,
-  FormControl,
-  FormLabel,
+  Field,
   Heading,
-  Input,
+  NumberInput,
   SimpleGrid,
   Stack,
   Text,
@@ -111,20 +110,24 @@ export const ExpressionTester: React.FC = () => {
         </Text>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
           {savedProgram.inputs.map((input) => (
-            <FormControl key={input.name}>
-              <FormLabel fontSize="sm" color="gray.700">
-                {input.name}
-                <Text as="span" color="gray.500" ml={2}>
+            <Field.Root key={input.name} gap={2}>
+              <Field.Label fontSize="sm" color="fg.muted">
+                <Text as="span" fontWeight="medium" color="fg.default">
+                  {input.name}
+                </Text>
+                <Text as="span" color="fg.muted" ml={2}>
                   ({input.description})
                 </Text>
-              </FormLabel>
-              <Input
-                type="number"
-                value={inputs[input.name] ?? ""}
-                onChange={(e) => handleInputChange(input.name, e.target.value)}
+              </Field.Label>
+              <NumberInput.Root
+                value={`${inputs[input.name] ?? ""}`}
                 step={input.step ?? 0.1}
-              />
-            </FormControl>
+                onValueChange={(e) => handleInputChange(input.name, `${e.value}`)}
+              >
+                <NumberInput.Input />
+                <NumberInput.Control />
+              </NumberInput.Root>
+            </Field.Root>
           ))}
         </SimpleGrid>
       </Box>
