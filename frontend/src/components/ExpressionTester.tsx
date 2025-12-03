@@ -1,12 +1,7 @@
-// ExampleParent.tsx
 import React, { useMemo, useState } from "react";
 import {
   Box,
-  // Code,
-  // Field,
   Heading,
-  // NumberInput,
-  // SimpleGrid,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -77,9 +72,14 @@ export const ExpressionTester: React.FC = () => {
         {steps.map((step, index) => {
           const execution = stepExecutions[index];
           return (
-            <Box key={step.name} border="1px" borderColor="gray.200" borderRadius="md" p={4}>
+            <Box
+              key={index}
+              border="1px"
+              borderColor="gray.200"
+              borderRadius="md"
+              p={4}
+            >
               <Stack gap={4}>
-                {/* <ScopePreview scope={execution?.scope ?? {}} /> */}
                 <ExpressionEditor
                   value={step}
                   onChange={(next) => handleStepChange(index, next)}
