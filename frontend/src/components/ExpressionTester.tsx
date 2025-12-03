@@ -2,11 +2,11 @@
 import React, { useMemo, useState } from "react";
 import {
   Box,
-  Code,
-  Field,
+  // Code,
+  // Field,
   Heading,
-  NumberInput,
-  SimpleGrid,
+  // NumberInput,
+  // SimpleGrid,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -38,30 +38,8 @@ type StepExecution = {
   error: string | null;
 };
 
-const ScopePreview: React.FC<{ scope: Record<string, number> }> = ({ scope }) => {
-  const entries = Object.entries(scope);
-  if (entries.length === 0) return null;
-  return (
-    <Box bg="gray.50" border="1px" borderColor="gray.200" borderRadius="md" p={3}>
-      <Text fontWeight="medium" mb={1}>
-        Available scope
-      </Text>
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={2} fontSize="sm">
-        {entries.map(([key, value]) => (
-          <Box key={key}>
-            <Code colorScheme="purple">{key}</Code>
-            <Text as="span" ml={2}>
-              = {value}
-            </Text>
-          </Box>
-        ))}
-      </SimpleGrid>
-    </Box>
-  );
-};
-
 export const ExpressionTester: React.FC = () => {
-  const [inputs, setInputs] = useState<Record<string, number>>(toInitialInputs);
+  const [inputs, _setInputs] = useState<Record<string, number>>(toInitialInputs);
   const [steps, setSteps] = useState<ExpressionEditorValue[]>(toInitialSteps);
 
   const stepExecutions = useMemo(() => {
@@ -88,51 +66,12 @@ export const ExpressionTester: React.FC = () => {
     return executions;
   }, [inputs, steps]);
 
-  const handleInputChange = (name: string, value: string) => {
-    const numeric = Number(value);
-    setInputs((prev) => ({ ...prev, [name]: Number.isNaN(numeric) ? 0 : numeric }));
-  };
-
   const handleStepChange = (index: number, next: ExpressionEditorValue) => {
     setSteps((prev) => prev.map((s, i) => (i === index ? next : s)));
   };
 
   return (
     <Stack gap={8}>
-      <Box>
-        <Heading size="md" mb={3}>
-          Input scope
-        </Heading>
-        <Text color="gray.600" mb={4}>
-          These values seed the initial scope. Each step can only reference these inputs and
-          variables created by earlier steps.
-        </Text>
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-          {savedProgram.inputs.map((input) => (
-            <Field.Root key={input.name} gap={2}>
-              <Field.Label fontSize="sm" color="fg.muted">
-                <Text as="span" fontWeight="medium" color="fg.default">
-                  {input.name}
-                </Text>
-                <Text as="span" color="fg.muted" ml={2}>
-                  ({input.description})
-                </Text>
-              </Field.Label>
-              <NumberInput.Root
-                value={`${inputs[input.name] ?? ""}`}
-                step={input.step ?? 0.1}
-                onValueChange={(e) => handleInputChange(input.name, `${e.value}`)}
-              >
-                <NumberInput.Input />
-                <NumberInput.Control />
-              </NumberInput.Root>
-            </Field.Root>
-          ))}
-        </SimpleGrid>
-      </Box>
-
-      <Box borderTopWidth="1px" borderColor="gray.200" />
-
       <Stack gap={6}>
         <Heading size="md">Stepwise expressions</Heading>
         {steps.map((step, index) => {
@@ -140,7 +79,7 @@ export const ExpressionTester: React.FC = () => {
           return (
             <Box key={step.name} border="1px" borderColor="gray.200" borderRadius="md" p={4}>
               <Stack gap={4}>
-                <ScopePreview scope={execution?.scope ?? {}} />
+                {/* <ScopePreview scope={execution?.scope ?? {}} /> */}
                 <ExpressionEditor
                   value={step}
                   onChange={(next) => handleStepChange(index, next)}
