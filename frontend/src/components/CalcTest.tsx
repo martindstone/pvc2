@@ -1,6 +1,6 @@
 import type React from "react";
 import { useMemo, useState } from "react";
-import Editor from "@monaco-editor/react";
+// import Editor from "@monaco-editor/react";
 
 import { program as defaultProgram } from "./savedCalcs";
 
@@ -14,7 +14,7 @@ import ExpressionTester from "./ExpressionTester";
 import "./CalcTest.css";
 
 export const CalcTest: React.FC = () => {
-  const [programText, setProgramText] = useState<string>(() =>
+  const [programText, _setProgramText] = useState<string>(() =>
     JSON.stringify(defaultProgram, null, 2)
   );
   // editor-managed input values (name -> number|boolean)
@@ -47,13 +47,13 @@ export const CalcTest: React.FC = () => {
     return calcRun(patched as CalcProgram);
   }, [programParsed, values, calcProgramValidation.ok]);
 
-  const handleFormatProgram = () => {
-    if (!programParsed) return;
-    setProgramText(JSON.stringify(programParsed, null, 2));
-  };
+  // const handleFormatProgram = () => {
+  //   if (!programParsed) return;
+  //   setProgramText(JSON.stringify(programParsed, null, 2));
+  // };
 
-  const handleResetProgram = () =>
-    setProgramText(JSON.stringify(defaultProgram, null, 2));
+  // const handleResetProgram = () =>
+  //   setProgramText(JSON.stringify(defaultProgram, null, 2));
 
   return (
     <div className="calc-container">
@@ -68,7 +68,7 @@ export const CalcTest: React.FC = () => {
             <ProgramEditor program={programParsed ?? defaultProgram} values={values} onChange={setValues} />
           </div>
 
-          <div className="calc-section">
+          {/* <div className="calc-section">
             <div className="calc-section-header">
               <h3 className="calc-section-title">Program</h3>
               <div className="calc-actions">
@@ -98,7 +98,7 @@ export const CalcTest: React.FC = () => {
             <div className={`hint ${calcProgramValidation.ok ? "error" : "ok"}`}>
               {calcProgramValidation.error ? `Program error: ${calcProgramValidation.error?.message ?? "unknown error"}` : "Program OK"}
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="calc-right">
