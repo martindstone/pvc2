@@ -11,7 +11,14 @@ import {
 import { ColorModeButton } from "./ui/color-mode"
 
 // Sticky top navigation bar with brand (left) and menu/actions (right)
-export const TopNav: React.FC<{ user?: any }> = ({ user }) => {
+type TopNavUser = {
+  id?: string
+  email?: string
+  name?: string
+  picture?: string
+}
+
+export const TopNav: React.FC<{ user?: TopNavUser }> = ({ user }) => {
   console.log("User in TopNav:", user);
   return (
     <Box as="header" position="sticky" top={0} zIndex={10} bg="bg" borderBottomWidth="1px" px={4} py={2}>

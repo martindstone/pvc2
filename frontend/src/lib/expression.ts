@@ -1,4 +1,4 @@
-import type { MathNode } from "mathjs";
+import type { ConstantNode, MathNode, SymbolNode } from "mathjs";
 import { create, all } from "mathjs";
 
 const math = create(all, {
@@ -73,9 +73,9 @@ function findUnknownSymbolName(root: MathNode): string | null {
   root.traverse((node: MathNode) => {
     if (badSymbol) return;
 
-    const s = node as any;
-    if (s.isSymbolNode) {
-      const name: string | undefined = s.name;
+    if (node.isSymbolNode) {
+      const symbolNode = node as SymbolNode;
+      const name: string | undefined = symbolNode.name;
       if (!isAllowedSymbol(name)) {
         badSymbol = name ?? null;
       }
@@ -93,9 +93,11 @@ function containsStringLiteral(root: MathNode): boolean {
   root.traverse((node: MathNode) => {
     if (found) return;
 
-    const c = node as any;
-    if (c.isConstantNode && typeof c.value === "string") {
-      found = true;
+    if (node.isConstantNode) {
+      const constantNode = node as ConstantNode;
+      if (typeof constantNode.value === "string") {
+        found = true;
+      }
     }
   });
 
@@ -131,10 +133,10 @@ export function analyzeExpression(source: string): ExpressionAnalysis {
     }
 
     return { variables, error: null };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       variables,
-      error: err?.message ?? "Invalid expression",
+      error: err instanceof Error ? err.message : "Invalid expression",
     };
   }
 }

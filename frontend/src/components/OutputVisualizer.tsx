@@ -46,7 +46,11 @@ export const OutputVisualizer: React.FC<OutputVisualizerProps> = ({ outputs, sup
           <Heading size="sm">{group}</Heading>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4} style={{ marginTop: 12 }}>
             {outs.map((o) => {
-              const raw = typeof o.value === 'number' ? o.value : Number(o.value as any);
+              const raw = typeof o.value === 'number'
+                ? o.value
+                : typeof o.value === 'string'
+                  ? Number(o.value)
+                  : Number.NaN;
               if (suppressZeroes && raw === 0) {
                 return null;
               }
