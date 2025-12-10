@@ -1,19 +1,5 @@
 import React, { useState } from "react";
-import {
-  HStack,
-  IconButton,
-  Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Select,
-  Stack,
-  Switch,
-  Text,
-  Textarea,
-} from "@chakra-ui/react";
+import { HStack, IconButton, Input, Select, Stack, Switch, Text, Textarea } from "@chakra-ui/react";
 import { PiCheckBold, PiPencilSimpleLine } from "react-icons/pi";
 
 import type { Program, ProgramInput } from "../lib/calc";
@@ -196,47 +182,47 @@ export const InputEditor: React.FC<InputEditorProps> = ({
               {booleanDefault ? "True" : "False"}
             </Switch>
           ) : (
-            <NumberInput
-              value={input.default ?? 0}
-              onChange={(_, valueAsNumber) => {
-                if (Number.isNaN(valueAsNumber)) return;
+            <Input
+              type="number"
+              value={input.default ?? ""}
+              onChange={(event) => {
+                const value = event.target.value;
+                if (value === "") {
+                  updateInput({ default: undefined });
+                  return;
+                }
+                const parsed = Number(value);
+                if (Number.isNaN(parsed)) return;
                 const nextValue =
-                  input.type === "integer" ? Math.round(valueAsNumber) : valueAsNumber;
+                  input.type === "integer" ? Math.round(parsed) : parsed;
                 updateInput({ default: nextValue });
               }}
               step={input.step ?? (input.type === "integer" ? 1 : 0.1)}
-            >
-              <NumberInputField />
-              {(input.type === "integer" || input.step !== undefined) && (
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              )}
-            </NumberInput>
+              size="sm"
+            />
           )}
         </FieldContainer>
 
         {input.type !== "boolean" ? (
           <FieldContainer label="Step">
             {isEditing ? (
-              <NumberInput
+              <Input
+                type="number"
                 value={input.step ?? ""}
-                onChange={(valueString, valueAsNumber) => {
-                  if (valueString === "" || Number.isNaN(valueAsNumber)) {
-                    updateInput({ step: undefined });
-                  } else {
-                    updateInput({ step: valueAsNumber });
-                  }
-                }}
+                placeholder="Optional step"
                 step={0.1}
-              >
-                <NumberInputField placeholder="Optional step" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
+                size="sm"
+                onChange={(event) => {
+                  const { value } = event.target;
+                  if (value === "") {
+                    updateInput({ step: undefined });
+                    return;
+                  }
+                  const parsed = Number(value);
+                  if (Number.isNaN(parsed)) return;
+                  updateInput({ step: parsed });
+                }}
+              />
             ) : (
               <ReadonlyText
                 value={
