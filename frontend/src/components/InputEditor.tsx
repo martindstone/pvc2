@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Field,
   HStack,
   IconButton,
   Input,
@@ -26,34 +25,28 @@ const FieldContainer: React.FC<{
   flex?: number;
   children: React.ReactNode;
 }> = ({ label, flex, children }) => (
-  <Field.Root
-    asChild
-    style={{
-      flex,
-      minWidth: flex ? 0 : undefined,
-      width: flex ? undefined : "100%",
-    }}
+  <Stack
+    gap={1}
+    p={2}
+    borderRadius="md"
+    borderWidth="1px"
+    borderColor="border.subtle"
+    bg="bg.subtle"
+    height="100%"
+    flex={flex}
+    minW={flex ? 0 : undefined}
+    w={flex ? undefined : "100%"}
   >
-    <Stack
-      gap={1}
-      p={2}
-      borderRadius="md"
-      borderWidth="1px"
-      borderColor="border.subtle"
-      bg="bg.subtle"
-      height="100%"
+    <Text
+      fontSize="xs"
+      color="fg.muted"
+      textTransform="uppercase"
+      letterSpacing="wider"
     >
-      <Text
-        fontSize="xs"
-        color="fg.muted"
-        textTransform="uppercase"
-        letterSpacing="wider"
-      >
-        {label}
-      </Text>
-      {children}
-    </Stack>
-  </Field.Root>
+      {label}
+    </Text>
+    {children}
+  </Stack>
 );
 
 const ReadonlyText: React.FC<{ value?: string }> = ({ value }) => (
