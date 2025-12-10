@@ -3,10 +3,11 @@ import {
   useState,
 } from "react";
 
-import { Box } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
 import { program as defaultProgram } from "./savedCalcs";
 
 import ExpressionTester from "./ExpressionTester";
+import ProgramInputsEditor from "./ProgramInputsEditor";
 
 import "./CalcTest.css";
 
@@ -28,8 +29,17 @@ export const CalcTest: React.FC = () => {
         <div className="calc-right">
           {/* <MathFieldTest /> */}
           <div style={{ padding: "1rem", fontFamily: "sans-serif" }}>
-            <h2>MathJSON Field Demo</h2>
-            <ExpressionTester program={program} setProgram={setProgram} />
+            <Stack gap={8}>
+              <Box>
+                <h2>Inputs</h2>
+                <ProgramInputsEditor program={program} setProgram={setProgram} />
+              </Box>
+
+              <Box>
+                <h2>MathJSON Field Demo</h2>
+                <ExpressionTester program={program} setProgram={setProgram} />
+              </Box>
+            </Stack>
           </div>
           <div className="calc-toolbar">
             <h2 className="calc-title">Live Result</h2>
