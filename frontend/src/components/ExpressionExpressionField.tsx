@@ -225,7 +225,7 @@ export const ExpressionExpressionField: React.FC<Props> = ({
           </Field.Root>
         </HStack>
       ) : (
-        <Text
+        <Box
           fontSize="sm"
           fontFamily="mono"
           color={previewParts.hasContent ? undefined : "fg.muted"}
@@ -263,7 +263,7 @@ export const ExpressionExpressionField: React.FC<Props> = ({
                 )
               )
             : "No expression"}
-        </Text>
+        </Box>
       )}
     </FieldContainer>
   );

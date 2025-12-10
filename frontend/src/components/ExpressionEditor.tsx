@@ -22,6 +22,7 @@ type ExpressionEditorProps = {
   result?: number | null;
   debug?: boolean;
   scope?: Record<string, number>;
+  density?: "default" | "compact";
 };
 
 const EXPRESSION_MIN_HEIGHT = "96px";
@@ -63,6 +64,7 @@ export const ExpressionEditor: React.FC<ExpressionEditorProps> = ({
   result,
   debug = false,
   scope,
+  density = "default",
 }) => {
   // Start in editing mode if there's no expression yet
   const [isEditing, setIsEditing] = useState(() => {
@@ -97,8 +99,11 @@ export const ExpressionEditor: React.FC<ExpressionEditorProps> = ({
     ? "Finish editing expression"
     : "Edit expression";
 
+  const isCompact = density === "compact";
+  const expressionMinHeight = isCompact ? "64px" : EXPRESSION_MIN_HEIGHT;
+
   return (
-    <Stack gap={1} w="full">
+    <Stack gap={isCompact ? 1 : 2} w="full">
       <ExpressionHeader
         name={value.name}
         description={value.description}
@@ -115,7 +120,7 @@ export const ExpressionEditor: React.FC<ExpressionEditorProps> = ({
 
       <ExpressionExpressionField
         label="Expression"
-        minHeight={EXPRESSION_MIN_HEIGHT}
+        minHeight={expressionMinHeight}
         isEditing={isEditing}
         source={source}
         onSourceChange={updateSource}
@@ -131,6 +136,7 @@ export const ExpressionEditor: React.FC<ExpressionEditorProps> = ({
         label="Value"
         result={result}
         fieldInvalid={fieldInvalid}
+        density={density}
       />
     </Stack>
   );

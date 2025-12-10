@@ -73,7 +73,7 @@ function findUnknownSymbolName(root: MathNode): string | null {
   root.traverse((node: MathNode) => {
     if (badSymbol) return;
 
-    if (node.isSymbolNode) {
+    if (node.type === 'SymbolNode') {
       const symbolNode = node as SymbolNode;
       const name: string | undefined = symbolNode.name;
       if (!isAllowedSymbol(name)) {
@@ -93,7 +93,7 @@ function containsStringLiteral(root: MathNode): boolean {
   root.traverse((node: MathNode) => {
     if (found) return;
 
-    if (node.isConstantNode) {
+    if (node.type === 'ConstantNode') {
       const constantNode = node as ConstantNode;
       if (typeof constantNode.value === "string") {
         found = true;

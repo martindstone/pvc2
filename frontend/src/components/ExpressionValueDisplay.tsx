@@ -6,30 +6,35 @@ type Props = {
   label: string;
   result?: number | null;
   fieldInvalid: boolean;
+  density?: "default" | "compact";
 };
 
 export const ExpressionValueDisplay: React.FC<Props> = ({
   label,
   result,
   fieldInvalid,
+  density = "default",
 }) => {
   const formattedResult = useMemo(() => {
     if (result === null || result === undefined) return "—";
     return Number.isFinite(result) ? result.toString() : "—";
   }, [result]);
 
+  const isCompact = density === "compact";
+
   return (
     <Box w="full">
       <Stack
-        gap={1}
-        p={3}
+        gap={isCompact ? 0.5 : 1}
+        px={isCompact ? 2 : 3}
+        py={isCompact ? 1.5 : 3}
         borderRadius="md"
         borderWidth="1px"
         borderColor="border.subtle"
         bg="bg.subtle"
       >
         <Text
-          fontSize="xs"
+          fontSize={isCompact ? "2xs" : "xs"}
           color="fg.muted"
           textTransform="uppercase"
           letterSpacing="wider"
@@ -37,7 +42,7 @@ export const ExpressionValueDisplay: React.FC<Props> = ({
           {label}
         </Text>
         <Text
-          fontSize="2xl"
+          fontSize={isCompact ? "lg" : "2xl"}
           fontWeight="semibold"
           fontFamily="mono"
           color={fieldInvalid ? "red.500" : undefined}

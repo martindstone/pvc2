@@ -168,7 +168,8 @@ export const ExpressionHeader: React.FC<ExpressionHeaderProps> = ({
         <IconButton
           aria-label={editButtonLabel}
           size="sm"
-          variant={isEditing ? "solid" : "outline"}
+          variant="solid"
+          colorPalette="gray"
           onClick={onToggleEditing}
           disabled={isEditing && !canExitEditing}
         >
