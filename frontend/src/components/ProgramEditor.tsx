@@ -60,25 +60,29 @@ const ChakraNumberInput: React.FC<{
   value: number;
   onChange: (value: number) => void;
 }> = ({ inp, value, onChange }) => {
-  const rootProps: any = {
+  const rootProps: {
+    value: string;
+    onValueChange: (event: { valueAsNumber: number }) => void;
+    step?: number;
+  } = {
     value: `${value}`,
-    onValueChange: (e: any) => {
-      onChange(e.valueAsNumber);
+    onValueChange: (event) => {
+      onChange(event.valueAsNumber);
     }
   };
-  if (Boolean(inp.step)) {
-    rootProps['step'] = inp.step;
+  if (inp.step !== undefined) {
+    rootProps.step = inp.step;
   }
 
-  const additionalChildren = [];
-  if (inp.type === 'integer' || Boolean(inp.step)) {
+  const additionalChildren: React.ReactNode[] = [];
+  if (inp.type === 'integer' || inp.step !== undefined) {
     additionalChildren.push(<NumberInput.Control key="control" />);
   }
-  if (Boolean(inp.units)) {
+  if (inp.units) {
     additionalChildren.push(
       <Box
         position="absolute"
-        right={inp.type === 'integer' || Boolean(inp.step) ? "2.25rem" : "0.75rem"}
+        right={inp.type === 'integer' || inp.step !== undefined ? "2.25rem" : "0.75rem"}
         top="50%"
         transform="translateY(-50%)"
         pointerEvents="none"
@@ -138,7 +142,7 @@ export const ProgramEditor: React.FC<ProgramEditorProps> = ({ program, values, o
   const resetToDefaults = (group?: string) => {
     const next = { ...values };
     for (const inp of program.inputs) {
-      if (!group || (inp.group || 'General') === group) next[inp.name] = inp.default as any;
+      if (!group || (inp.group || 'General') === group) next[inp.name] = inp.default;
     }
     onChange(next);
   };

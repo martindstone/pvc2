@@ -41,8 +41,8 @@ export const ExpressionTester: React.FC<ExpressionTesterProps> = ({ program, set
           value = evalExpression(step.expression, scopeForStep);
           scope = { ...scope, [step.name]: value };
         }
-      } catch (err: any) {
-        error = err?.message ?? "Unable to evaluate expression";
+      } catch (err: unknown) {
+        error = err instanceof Error ? err.message : "Unable to evaluate expression";
       }
 
       executions.push({ scope: scopeForStep, value, error });
