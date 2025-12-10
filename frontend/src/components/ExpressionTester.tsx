@@ -1,31 +1,15 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   Box,
+  Button,
   Heading,
   Stack,
   Text,
 } from "@chakra-ui/react";
 
 import { ExpressionEditor, type ExpressionEditorValue } from "./ExpressionEditor";
+import type { Program as CalcProgram } from "../lib/calc";
 import { evalExpression } from "../lib/expression";
-import { savedCalcsExpressions } from "./savedCalcs2";
-import { program as savedProgram } from "./savedCalcs";
-
-const toInitialInputs = () => {
-  const initial: Record<string, number> = {};
-  for (const inp of savedProgram.inputs) {
-    const value = inp.default as number | boolean;
-    initial[inp.name] = typeof value === "boolean" ? Number(value) : Number(value ?? 0);
-  }
-  return initial;
-};
-
-const toInitialSteps = (): ExpressionEditorValue[] =>
-  savedCalcsExpressions.map((step) => ({
-    name: step.name,
-    description: step.description,
-    expression: step.expression,
-  }));
 
 type StepExecution = {
   scope: Record<string, number>;
@@ -33,15 +17,21 @@ type StepExecution = {
   error: string | null;
 };
 
-export const ExpressionTester: React.FC = () => {
-  const [inputs, _setInputs] = useState<Record<string, number>>(toInitialInputs);
-  const [steps, setSteps] = useState<ExpressionEditorValue[]>(toInitialSteps);
+type ExpressionTesterProps = {
+  program: CalcProgram;
+  setProgram: (next: CalcProgram) => void;
+};
 
+export const ExpressionTester: React.FC<ExpressionTesterProps> = ({ program, setProgram }) => {
   const stepExecutions = useMemo(() => {
     const executions: StepExecution[] = [];
-    let scope: Record<string, number> = { ...inputs };
+    let scope: Record<string, number> = program.inputs.reduce((acc, inp) => {
+      const value = inp.default as number | boolean;
+      acc[inp.name] = typeof value === "boolean" ? Number(value) : Number(value ?? 0);
+      return acc;
+    }, {} as Record<string, number>);
 
-    for (const step of steps) {
+    for (const step of program.steps) {
       const scopeForStep = { ...scope };
       let value: number | null = null;
       let error: string | null = null;
@@ -59,17 +49,20 @@ export const ExpressionTester: React.FC = () => {
     }
 
     return executions;
-  }, [inputs, steps]);
+  }, [program.inputs, program.steps]);
 
   const handleStepChange = (index: number, next: ExpressionEditorValue) => {
-    setSteps((prev) => prev.map((s, i) => (i === index ? next : s)));
+    const newSteps = program.steps.map((step, i) =>
+      i === index ? next : step
+    );
+    setProgram({ ...program, steps: newSteps });
   };
 
   return (
     <Stack gap={8}>
       <Stack gap={6}>
         <Heading size="md">Stepwise expressions</Heading>
-        {steps.map((step, index) => {
+        {program.steps.map((step, index) => {
           const execution = stepExecutions[index];
           return (
             <Box
@@ -96,6 +89,19 @@ export const ExpressionTester: React.FC = () => {
             </Box>
           );
         })}
+        <Button onClick={() => {
+          const newStep: ExpressionEditorValue = {
+            name: `step${program.steps.length + 1}`,
+            description: "",
+            expression: {
+              version: 1,
+              source: "",
+            },
+          };
+          setProgram({ ...program, steps: [...program.steps, newStep] });
+        }}>
+          Add step
+        </Button>
       </Stack>
     </Stack>
   );

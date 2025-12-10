@@ -98,7 +98,7 @@ export const ExpressionEditor: React.FC<ExpressionEditorProps> = ({
     : "Edit expression";
 
   return (
-    <Stack gap={3} w="full">
+    <Stack gap={1} w="full">
       <ExpressionHeader
         name={value.name}
         description={value.description}

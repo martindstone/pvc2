@@ -42,7 +42,7 @@ const FieldContainer: React.FC<{
   >
     <Stack
       gap={1}
-      p={3}
+      p={2}
       borderRadius="md"
       borderWidth="1px"
       borderColor="border.subtle"
