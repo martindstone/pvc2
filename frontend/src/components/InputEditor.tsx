@@ -3,7 +3,11 @@ import {
   HStack,
   IconButton,
   Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
   NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Select,
   Stack,
   Switch,
@@ -192,42 +196,47 @@ export const InputEditor: React.FC<InputEditorProps> = ({
               {booleanDefault ? "True" : "False"}
             </Switch>
           ) : (
-            <NumberInput.Root
-              value={`${input.default ?? 0}`}
-              onValueChange={(event) => {
-                const value = event.valueAsNumber;
-                if (Number.isNaN(value)) return;
-                const nextValue = input.type === "integer" ? Math.round(value) : value;
+            <NumberInput
+              value={input.default ?? 0}
+              onChange={(_, valueAsNumber) => {
+                if (Number.isNaN(valueAsNumber)) return;
+                const nextValue =
+                  input.type === "integer" ? Math.round(valueAsNumber) : valueAsNumber;
                 updateInput({ default: nextValue });
               }}
               step={input.step ?? (input.type === "integer" ? 1 : 0.1)}
             >
-              <NumberInput.Input />
+              <NumberInputField />
               {(input.type === "integer" || input.step !== undefined) && (
-                <NumberInput.Control />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
               )}
-            </NumberInput.Root>
+            </NumberInput>
           )}
         </FieldContainer>
 
         {input.type !== "boolean" ? (
           <FieldContainer label="Step">
             {isEditing ? (
-              <NumberInput.Root
+              <NumberInput
                 value={input.step ?? ""}
-                onValueChange={(event) => {
-                  const value = event.valueAsNumber;
-                  if (Number.isNaN(value)) {
+                onChange={(valueString, valueAsNumber) => {
+                  if (valueString === "" || Number.isNaN(valueAsNumber)) {
                     updateInput({ step: undefined });
                   } else {
-                    updateInput({ step: value });
+                    updateInput({ step: valueAsNumber });
                   }
                 }}
                 step={0.1}
               >
-                <NumberInput.Input placeholder="Optional step" />
-                <NumberInput.Control />
-              </NumberInput.Root>
+                <NumberInputField placeholder="Optional step" />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
             ) : (
               <ReadonlyText
                 value={
